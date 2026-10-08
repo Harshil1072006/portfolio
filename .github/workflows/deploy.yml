@@ -10,6 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# Ensure all commands run inside the .figma directory where the Vite project lives
+defaults:
+  run:
+    working-directory: .figma
+
 concurrency:
   group: 'pages'
   cancel-in-progress: true
@@ -21,22 +26,31 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup Node
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
-        run: npm install
-      - name: Build
+          cache: npm
+
+      - name: Install dependencies (using lockfile)
+        run: npm ci
+
+      - name: Build the Vite site
         run: npm run build
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          static_site: true
+
+      - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: ./dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
