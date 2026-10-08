@@ -1,0 +1,10 @@
+{
+  "description": "Showcase cybersecurity projects with an engaging, animated portfolio designed to attract attention and highlight expertise effectively.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
